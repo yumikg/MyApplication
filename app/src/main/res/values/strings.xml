@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">MyApplication</string>
+    <string name="tvName">池谷　優美</string>
+    <string name="tvBirthday">1985/05/28</string>
+
 </resources>
