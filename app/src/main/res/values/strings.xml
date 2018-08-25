@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">MyApplication</string>
-    <string name="tvName">池谷　優美</string>
-    <string name="tvBirthday">1985/05/28</string>
+    <string name="tv_profile_name">池谷　優美</string>
+    <string name="tv_profile_birthday">1985/05/28</string>
+    <string name="bt_profile_edit">edit仮</string>
+    <string name="bt_toTab">tabテスト</string>
 
 </resources>

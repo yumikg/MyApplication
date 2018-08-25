@@ -27,9 +27,9 @@
 
     <ImageView
         android:id="@+id/memo_imageView"
-        android:layout_width="63dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="70dp"
+        android:layout_width="66dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="65dp"
         android:layout_marginEnd="20dp"
         android:src="@android:drawable/stat_notify_chat"
         android:tint="@android:color/holo_blue_light"
@@ -37,11 +37,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/camera_ImageViewImageView"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/camera_ImageView"
         android:layout_width="139dp"
         android:layout_height="110dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="80dp"
+        android:onClick="onCameraImageClick"
         android:src="@android:drawable/ic_menu_camera"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +55,7 @@
         android:layout_height="18dp"
         android:layout_marginTop="160dp"
         android:layout_marginEnd="45dp"
-        android:text="@string/tvBirthday"
+        android:text="@string/tv_profile_birthday"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,7 +66,7 @@
         android:layout_marginStart="160dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/tvName"
+        android:text="@string/tv_profile_name"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,27 +82,8 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/toolbarStyle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:elevation="6dp"
-        app:layout_constraintStart_toEndOf="@+id/editButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
-
-    <ImageButton
-        android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="168dp"
-        android:elevation="6dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_scrollView"/>
 
     <ImageButton
         android:id="@+id/toHomeButton"
@@ -113,6 +97,26 @@
         android:src="@android:drawable/ic_menu_revert"
         android:tint="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:onClick="onClick"
+        android:text="@string/bt_profile_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/toTabSampleButton"
+        android:layout_width="107dp"
+        android:layout_height="47dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="onClick"
+        android:text="@string/bt_toTab"
+        app:layout_constraintEnd_toStartOf="@+id/editButton"
         app:layout_constraintTop_toTopOf="parent" />
 
 
