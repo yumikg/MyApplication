@@ -10,9 +10,8 @@
     <ScrollView
         android:id="@+id/profile_scrollView"
         android:layout_width="0dp"
-        android:layout_height="871dp"
+        android:layout_height="872dp"
         android:layout_marginTop="50dp"
-        android:layout_marginEnd="8dp"
         android:clipToPadding="false"
         android:fillViewport="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,13 +76,14 @@
         android:id="@+id/profileToolbar"
         android:layout_width="0dp"
         android:layout_height="53dp"
+        android:layout_marginStart="31dp"
         android:background="#ffffff"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/toolbarStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_scrollView"/>
+        app:layout_constraintTop_toBottomOf="@+id/profile_scrollView" />
 
     <ImageButton
         android:id="@+id/toHomeButton"
@@ -104,6 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:elevation="6dp"
         android:onClick="onClick"
         android:text="@string/bt_profile_edit"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,6 +115,7 @@
         android:layout_width="107dp"
         android:layout_height="47dp"
         android:layout_marginEnd="8dp"
+        android:elevation="6dp"
         android:onClick="onClick"
         android:text="@string/bt_toTab"
         app:layout_constraintEnd_toStartOf="@+id/editButton"

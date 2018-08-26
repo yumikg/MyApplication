@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">MyApplication</string>
+
+    //activity_profileへの記載
     <string name="tv_profile_name">池谷　優美</string>
     <string name="tv_profile_birthday">1985/05/28</string>
     <string name="bt_profile_edit">edit仮</string>
-    <string name="bt_toTab">tabテスト</string>
+    <string name="bt_toTab">Tabテスト</string>
+
+    //activity_profile_editへの記載
+    <string name="tv_edit_toolbar">編集中</string>
+    <string name="tv_edit_name">名前</string>
+    <string name="et_edit_name">名前を入力してください</string>
+    <string name="tv_edit_birthday">誕生日</string>
+    <string name="et_edit_birthday">お誕生日を登録しましょう</string>
+    <string name="tv_edit_event">イベントの日</string>
+    <string name="et_edit_event">イベントの日を登録しましょう</string>
+    <string name="et_edit_note">好き嫌い、特徴をメモ</string>
+
+
 
 </resources>

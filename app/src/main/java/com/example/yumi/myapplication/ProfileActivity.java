@@ -20,9 +20,10 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-public class ProfileActivity extends Activity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     //ストレージに保存された画像のURIを格納するフィールド
     private Uri _imageUri;
@@ -64,10 +65,10 @@ public class ProfileActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
 
-//            case R.id.editButton:
-//                Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
-//                startActivity(intent);
-//                break;
+            case R.id.editButton:
+                Intent editintent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(editintent);
+                break;
 
             case R.id.toTabSampleButton:
                 Intent intent = new Intent(ProfileActivity.this, TabSampleActivity.class);
