@@ -9,13 +9,13 @@
     <string name="bt_toTab">Tabテスト</string>
 
     //activity_profile_editへの記載
-    <string name="tv_edit_toolbar">編集中</string>
+    <string name="tv_edit_toolbar">プロフィールを編集</string>
     <string name="tv_edit_name">名前</string>
-    <string name="et_edit_name">名前を入力してください</string>
+    <string name="et_edit_name"></string>
     <string name="tv_edit_birthday">誕生日</string>
-    <string name="et_edit_birthday">お誕生日を登録しましょう</string>
+    <string name="et_edit_birthday"></string>
     <string name="tv_edit_event">イベントの日</string>
-    <string name="et_edit_event">イベントの日を登録しましょう</string>
+    <string name="et_edit_event"></string>
     <string name="et_edit_note">好き嫌い、特徴をメモ</string>
 
 

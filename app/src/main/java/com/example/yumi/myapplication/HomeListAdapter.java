@@ -48,9 +48,9 @@ public class HomeListAdapter extends BaseAdapter {
         }
 
         //リストビューへの表示
-        String str = "Staff ID.170900"+ String.valueOf(position+1)
-                + "\n\nBirthday:" + birthdaylist[position]
-                + "\nTel: 020-8931-9933 #340" + String.valueOf(position+1);
+        String str = "\n\nBirthday:" + birthdaylist[position];
+//                + "Staff ID.170900"+ String.valueOf(position+1)
+//                + "\nTel: 020-8931-9933 #340" + String.valueOf(position+1);
         holder.birthday.setText(str);
 
         holder.text.setText(namelist[position]);

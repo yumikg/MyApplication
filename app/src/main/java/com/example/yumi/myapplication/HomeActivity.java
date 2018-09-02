@@ -97,7 +97,7 @@ public class HomeActivity extends AppCompatActivity
             case R.id.inputButton:
 
             //インテントの作成
-            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+            Intent intent = new Intent(HomeActivity.this,ProfileActivity.class);
             //遷移先に転送
             startActivity(intent);
 
