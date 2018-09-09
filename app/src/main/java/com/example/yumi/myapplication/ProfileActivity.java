@@ -13,41 +13,62 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.material.tabs.TabLayout;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity
+        implements View.OnClickListener {
+
+
+    private ImageButton closeButton;
+    private ImageButton photoButton;
 
     //ストレージに保存された画像のURIを格納するフィールド
-//    private Uri _imageUri;
-//    private static final int READ_REQUEST_CODE = 42;
-    private Uri m_uri;
+    private Uri resultUri;
     private static final int REQUEST_CHOOSER = 1000;
+    private final static int REQUEST_PERMISSION = 1002;
+    private String filePath;
+    private Uri cameraUri;
+    private File cameraFile;
+    private Intent intentCamera;
+
+    //タブ
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
+    // Fragmentでの画面を2つ用意。
+    //private String[] pageFragments = {"Fragment: 0", "Fragment: 1"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        setViews();
-
-        //findViewById(R.id.toHomeButton).setOnClickListener(this);
-        //findViewById(R.id.editButton).setOnClickListener(this);
-        //findViewById(R.id.toTabSampleButton).setOnClickListener(this);
 
         ImageButton toHomeButton = (ImageButton) findViewById(R.id.toHomeButton);
         toHomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               finish();
+                finish();
             }
         });
 
@@ -56,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this,EditProfileActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -65,36 +86,37 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         toTabSampleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this,TabSampleActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, TabSampleActivity.class);
                 startActivity(intent);
             }
         });
 
-//
-//        findViewById(R.id.camera_ImageView).setOnClickListener(new View.OnClickListener() {
-//            //端末標準ギャラリーを起動し、画像のURIを取得
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//                intent.addCategory(Intent.CATEGORY_OPENABLE);
-//                intent.setType("image/*");
-//
-//                startActivityForResult(intent, READ_REQUEST_CODE);
-//            }
-//        });
+
+        photoButton = (ImageButton)findViewById(R.id.photo_button);
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _showGallery(); //_showGalleryメソッドを起動
+            }
+        });
+
+        //Tabの実装
+        // Set a ViewPager.
+        this.setViewPager();
+
+        // Set a TabLayout.
+        this.setTabLayout();
 
     }
 
-    public void onClick(View view){
 
+
+    public void onClick(View view){
+        //
     }
 
     //カメラ画像をタップした時の処理
-    public void onCameraImageClick(View view) {
-
-        //ストレージ使用しない処理ここだけ
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, 200);
+    public void onCameraButtonClick(View view) {
 
         //ストレージ使用の処理
         //WRITE_EXTERNAL_STORAGEの許可がおりてないなら
@@ -120,29 +142,37 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void setViews(){
-        ImageView imageView = (ImageView)findViewById(R.id.camera_ImageView);
-        imageView.setOnClickListener(camera_onClick);
-    }
-    private View.OnClickListener camera_onClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            showGallery();
-        }
-    };
 
-    private void showGallery() {
+    //Tabの実装
+    private void setViewPager() {
+        //ViewPagerの初期化
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(fragmentManager);
+        viewPager.setAdapter(tabsPagerAdapter);
+        //TabLayoutの初期化
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void setTabLayout() {
+
+        this.tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+
+        this.tabLayout.setupWithViewPager(this.viewPager);
+
+    }
+
+    //カメラ処理ここから
+    private void _showGallery() {
 
         //カメラの起動Intentの用意
-        String photoName = System.currentTimeMillis() + ".jpg";
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, photoName);
-        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        m_uri = getContentResolver()
-                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-        Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, m_uri);
+        if (Build.VERSION.SDK_INT >= 23) {
+            checkPermission();
+        }
+        else {
+            intentCamera = cameraIntent(); //cameraIntentというIntentを返す
+        }
 
         // ギャラリー用のIntent作成
         Intent intentGallery;
@@ -154,32 +184,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             intentGallery.addCategory(Intent.CATEGORY_OPENABLE);
             intentGallery.setType("image/jpeg");
         }
-        Intent intent = Intent.createChooser(intentCamera, "画像の選択");
-        intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {intentGallery});
+
+        //ChooserにGallaryのIntentとCameraのIntentを登録
+        Intent intent = Intent.createChooser(intentGallery, "Select Image");
+        if(intentCamera!=null){
+            intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {intentCamera});
+        }
         startActivityForResult(intent, REQUEST_CHOOSER);
     }
 
+    //
     @Override
-    public void onRequestPermissionsResult(int requestCode, String [] permissions, int[] grantResults) {
-        //WRITE_EXTERNAL_STORAGEに対する許可をダイアログで行ったら
-        if(requestCode == 2000 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            ImageView camera_ImageView = findViewById(R.id.camera_ImageView);
-            onCameraImageClick(camera_ImageView);
-        }
-    }
-
-    //カメラ画像への処理：撮影した後の処理
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-//        if(requestCode == 200 && resultCode == RESULT_OK ){
-//            //ストレージ不使用の処理
-////            Bitmap bitmap = data.getParcelableExtra("data");
-////            ImageView camera_ImageView = findViewById(R.id.camera_ImageView);
-////            camera_ImageView.setImageBitmap(bitmap);
-//            //ストレージ使用の処理
-//            ImageView camera_ImageView = findViewById(R.id.camera_ImageView);
-//            camera_ImageView.setImageURI(_imageUri);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_CHOOSER) {
@@ -189,10 +205,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 return ;
             }
 
-            Uri resultUri = (data != null ? data.getData() : m_uri);
+            //dataがnullの場合はギャラリーではなくカメラからの取得と判定しカメラのUriを使う
+            resultUri = (data != null ? data.getData() : cameraUri);
 
             if(resultUri == null) {
                 // 取得失敗
+                Toast.makeText(this, "Error.Try again.", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -205,9 +223,63 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             );
 
             // 画像を設定
-            ImageView imageView = (ImageView)findViewById(R.id.camera_ImageView);
+            ImageView imageView = (ImageView)findViewById(R.id.photo);
             imageView.setImageURI(resultUri);
+
         }
     }
+
+    private Intent cameraIntent(){
+        // 保存先のフォルダーを作成
+        File cameraFolder = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "IMG"
+        );
+        cameraFolder.mkdirs();
+
+        // 保存ファイル名
+        String fileName = new SimpleDateFormat("ddHHmmss").format(new Date());
+        filePath = cameraFolder.getPath() +"/" + fileName + ".jpg";
+        Log.d("debug","filePath:"+filePath);
+
+        // capture画像のファイルパス
+        cameraFile = new File(filePath);
+        cameraUri = Uri.fromFile(cameraFile);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
+
+        return intent;
+    }
+
+    // Runtime Permission check
+    private void checkPermission(){
+        // 既に許可している
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+            cameraIntent();
+        }
+        // 拒否していた場合
+        else{
+            requestLocationPermission();
+        }
+    }
+
+    // 許可を求める
+    private void requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(ProfileActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+
+        } else {
+            Toast toast = Toast.makeText(this, "Camera function is disabled", Toast.LENGTH_SHORT);
+            toast.show();
+
+            ActivityCompat.requestPermissions
+                    (this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,}, REQUEST_PERMISSION);
+
+        }
+    }
+
+
 
 }

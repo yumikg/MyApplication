@@ -18,6 +18,9 @@
     <string name="et_edit_event"></string>
     <string name="et_edit_note">好き嫌い、特徴をメモ</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="tv_received_fragment">もらったもの</string>
+    <string name="tv_gave_fragment">あげたもの</string>
 
 
 </resources>
